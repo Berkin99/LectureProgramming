@@ -11,9 +11,10 @@ using namespace std;
 class Lecture;
 class Program;
 class ProgramManager;
-int calculateIntersections(vector<Program> prog);
-bool isIntersect(Program p1, Program p2);
 
+bool isIntersect(Program p1, Program p2);
+int calculateIntersections(vector<Program> prog);
+vector<Program> calculateMaxPrograms(vector<Program> prog);
 
 class Lecture {
 	int day;
@@ -43,9 +44,9 @@ class Program {
 	string programName;
 	int credit;
 	int nofl;
+	int intersections;
 	vector<Lecture> lectures;
 	public:
-	int intersections;
 	Program() {
 		programName = "unknown";
 		credit = 0;
@@ -58,27 +59,28 @@ class Program {
 		nofl = 0;
 		intersections = 0;
 	}
-
 	void addLecture(Lecture l) { lectures.push_back(l); nofl++; }
 	vector<Lecture> getLectures() {return lectures;}
 	string getName() { return programName;}
 	int getCredit() { return credit;}
 	int getNofl() { return nofl; }
-
+	int getIntersections() { return intersections; }
+	void setIntersections(int p) { intersections = p; }
+	void incIntersections() { intersections++; }
 };
 
 class ProgramManager {
 	vector<Program> programs;
 	int nofp;
 	public:
-
 	ProgramManager() {
 		nofp = 0;
 	}
-
-	vector<Program> calculateMaxPrograms();
 	void textRead(string textaddr);
-	
+	bool isIntersect(Program a, Program b);
+	int calculateIntersections();
+	void calculateMaxPrograms();
+
 	void addProgram(Program p) {
 		for (int i = 0; i < nofp; i++) {
 			if (programs[i].getName() == p.getName()) {
@@ -96,12 +98,14 @@ class ProgramManager {
 
 	void printPrograms(vector<Program> prog) {
 		int len = prog.size();
+		int totalCredit = 0;
 		for (int i = 0; i < len; i++)
 		{
 			printProgram(prog[i]);
+			totalCredit += prog[i].getCredit();
 		}
 
-		cout << "" << endl;
+		cout << "Total Credit : " << totalCredit << endl;
 
 	}
 
@@ -110,9 +114,9 @@ class ProgramManager {
 		cout << pr.getName() << "\n" << pr.getCredit() << endl;
 		cout << "Program Lectures: " << nfl << endl;
 		cout << "" << endl;
-		for (int j = 0; j < nfl; j++) {
+		/*for (int j = 0; j < nfl; j++) {
 			printLecture(pr.getLectures()[j]);
-		}
+		}*/
 		cout << "" << endl;
 
 	}
@@ -157,37 +161,7 @@ void ProgramManager::textRead(string textaddr) {
 
 }
 
-vector<Program> ProgramManager::calculateMaxPrograms() {
-	//calculate intersections
-	int total_intersections = calculateIntersections(programs);
-	vector<Program> prg = programs;
-	
-	//while intersections!=0
-	while (total_intersections != 0) {
-		//find max intersect and erase
-		int maxIntIndex = 0;
-		int maxInt=0;
-		int len = prg.size();
-		for (int i = 0; i < len; i++)
-		{
-			if(prg[i].intersections>maxInt){
-				maxInt = prg[i].intersections;
-				maxIntIndex = i;
-			}
-		}
-
-		prg.erase(next(prg.begin(), maxIntIndex));
-		//recalc intersections
-		total_intersections = calculateIntersections(prg);
-
-	}
-	
-	
-	
-	return prg;
-}
-
-bool isIntersect(Program p1, Program p2) {
+bool ProgramManager::isIntersect(Program p1, Program p2) {
 
 	vector<Lecture> p1l = p1.getLectures();
 	vector<Lecture> p2l = p2.getLectures();
@@ -217,21 +191,23 @@ bool isIntersect(Program p1, Program p2) {
 }
 
 
-int calculateIntersections(vector<Program> prog) {
+int ProgramManager::calculateIntersections() {
 	int intersections = 0;
-	int len = prog.size();
+	int len = programs.size();
 
 	for (int i = 0; i < len; i++) {
-		prog[i].intersections = 0;
+		programs[i].setIntersections(0);
 	}
-
 
 	for (int i = 0; i < len - 1; i++) {
 		for (int j = i+1; j < len; j++) {
-			if (isIntersect(prog[i], prog[j])) {
-				cout << prog[i].getName() << " and " << prog[j].getName() << " are intersecting!" << endl;
-				prog[i].intersections++;
-				prog[j].intersections++;
+			if (isIntersect(programs[i], programs[j])) {
+				cout << programs[i].getName() << " and " << programs[j].getName() << " are intersecting!" << endl;
+				programs[i].incIntersections();
+				programs[j].incIntersections();
+
+				cout << programs[i].getName() << " intersections: " << programs[i].getIntersections() << endl;
+				cout << programs[j].getName() << " intersections: " << programs[j].getIntersections() << endl;
 				intersections++;
 			}
 		}
@@ -239,13 +215,48 @@ int calculateIntersections(vector<Program> prog) {
 	return intersections;
 }
 
+void ProgramManager::calculateMaxPrograms() {
+	//calculate intersections
+
+	int total_intersections = calculateIntersections();
+	cout << "/// Calculating Max Program ///" << endl;
+	cout << "Total Intersections : " << total_intersections << endl;
+
+
+	int maxIntIndex;
+	int maxInt;
+	int len;
+	//while intersections!=0
+	while (total_intersections != 0) {
+		//find max intersect and erase
+		maxIntIndex = 0;
+		maxInt = 0;
+		len = programs.size();
+		cout << "Program Size: " << len << endl;
+		for (int i = 0; i < len; i++)
+		{
+			if (programs[i].getIntersections() > maxInt) {
+				cout << "!!!!MAX: " << programs[i].getName() << endl;
+				cout << programs[i].getName() << " intersections = " << programs[i].getIntersections() << endl;
+				maxInt = programs[i].getIntersections();
+				maxIntIndex = i;
+ 			}
+		}
+		cout << "Max Int: " << maxInt << ", MaxIntIndex: " << maxIntIndex << endl;
+		cout << "Delete " << programs[maxIntIndex].getName() << endl;
+
+		programs.erase(programs.begin() + maxIntIndex);
+		total_intersections = calculateIntersections();
+		
+	}
+
+}
 
 
 int main(void) {
 	ProgramManager pr;
 	pr.textRead("lectures.txt");
-	vector<Program> progs = pr.calculateMaxPrograms();
-	pr.printPrograms(progs);
-	while (1);
+	pr.calculateMaxPrograms();
+	pr.printPrograms(pr.getPrograms());
 	return 0;
 }
