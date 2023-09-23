@@ -1,11 +1,2 @@
 ﻿  main.cpp
-C:\Users\User\source\repos\LectureProgramming\LectureProgramming\main.cpp(100,11): warning C4267: 'başlatılıyor': 'size_t' - 'int' dönüşümü; veri kaybı olabilir
-C:\Users\User\source\repos\LectureProgramming\LectureProgramming\main.cpp(169,12): warning C4267: 'başlatılıyor': 'size_t' - 'int' dönüşümü; veri kaybı olabilir
-C:\Users\User\source\repos\LectureProgramming\LectureProgramming\main.cpp(170,12): warning C4267: 'başlatılıyor': 'size_t' - 'int' dönüşümü; veri kaybı olabilir
-C:\Users\User\source\repos\LectureProgramming\LectureProgramming\main.cpp(175,14): warning C4244: 'başlatılıyor': 'float' - 'int' dönüşümü; veri kaybı olabilir
-C:\Users\User\source\repos\LectureProgramming\LectureProgramming\main.cpp(176,14): warning C4244: 'başlatılıyor': 'float' - 'int' dönüşümü; veri kaybı olabilir
-C:\Users\User\source\repos\LectureProgramming\LectureProgramming\main.cpp(179,14): warning C4244: 'başlatılıyor': 'float' - 'int' dönüşümü; veri kaybı olabilir
-C:\Users\User\source\repos\LectureProgramming\LectureProgramming\main.cpp(180,14): warning C4244: 'başlatılıyor': 'float' - 'int' dönüşümü; veri kaybı olabilir
-C:\Users\User\source\repos\LectureProgramming\LectureProgramming\main.cpp(196,10): warning C4267: 'başlatılıyor': 'size_t' - 'int' dönüşümü; veri kaybı olabilir
-C:\Users\User\source\repos\LectureProgramming\LectureProgramming\main.cpp(234,22): warning C4267: '=': 'size_t' - 'int' dönüşümü; veri kaybı olabilir
   LectureProgramming.vcxproj -> C:\Users\User\source\repos\LectureProgramming\x64\Debug\LectureProgramming.exe
